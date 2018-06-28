@@ -10,7 +10,7 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["Find Chocolate", "Buy Chocolate", "Eat Chocolate"]
+    var itemArray = ["Find Chocolate", "Buy Chocolate", "Eat Chocolate", "Make Candy"]
     let defaults = UserDefaults.standard //sets up std user defaults space
 
     override func viewDidLoad() {

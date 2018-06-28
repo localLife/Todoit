@@ -34,7 +34,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="To Do It" id="O0d-Ag-Qmg">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="V1j-e8-ohd">
-                            <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="tintColor" red="0.89451847230000003" green="1" blue="0.9638619491" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
                                 <action selector="addButtonPressed:" destination="E7t-TY-epP" id="QpI-Pp-Pef"/>
                             </connections>

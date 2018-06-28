@@ -22,6 +22,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
+        //in case of problems
         print("Memory overload, abandoning ship!")
     }
 
