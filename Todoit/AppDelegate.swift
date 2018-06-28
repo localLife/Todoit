@@ -16,7 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        // Runs prior to app launch, expandTilde=true, grab last item and print as string
+        //print(NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last! as String)
         return true
+    }
+    
+    func applicationDidReceiveMemoryWarning(_ application: UIApplication) {
+        print("Memory overload, abandoning ship!")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

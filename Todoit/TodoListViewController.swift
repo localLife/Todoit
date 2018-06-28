@@ -11,10 +11,17 @@ import UIKit
 class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Chocolate", "Buy Chocolate", "Eat Chocolate"]
+    let defaults = UserDefaults.standard //sets up std user defaults space
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        //Next line would work if TodoListArray exists in userDefaults, but will crash if not
+        //So commented and changed to better option
+        //itemArray = defaults.array(forKey: "TodoListArray") as! [String]
+        if let items = defaults.array(forKey: "TodoListArray")
+            as? [String]  {
+            itemArray = items
+        }
     }
 
     //MARK - Tableview Data Source Methods
@@ -58,6 +65,8 @@ class TodoListViewController: UITableViewController {
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             self.itemArray.append(textField.text!)
+            //save updated itemArray to userdef space after add
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
             self.tableView.reloadData()  //reload to include newly added data
             print(self.itemArray)
         }
