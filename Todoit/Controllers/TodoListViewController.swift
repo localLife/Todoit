@@ -10,18 +10,26 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
     
-    var itemArray = ["Find Chocolate", "Buy Chocolate", "Eat Chocolate", "Make Candy"]
-    let defaults = UserDefaults.standard //sets up std user defaults space
+    //Array of Items
+    var itemArray = [Item]()
+    //let defaults = UserDefaults.standard //sets up std user defaults space
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Next line would work if TodoListArray exists in userDefaults, but will crash if not
-        //So commented and changed to better option
+       
+        //Begin Hardcode
+        let newItem = Item(); newItem.title = "Find Chocolate"; itemArray.append(newItem)
+        let newItem2 = Item(); newItem2.title = "Buy Chocolate"; itemArray.append(newItem2)
+        let newItem3 = Item(); newItem3.title = "Eat Chocolate"; itemArray.append(newItem3)
+        //End Hardcode
+        
+        //Create Array of items from UserDefaults (1st line works only if User Defaults not empty.
         //itemArray = defaults.array(forKey: "TodoListArray") as! [String]
-        if let items = defaults.array(forKey: "TodoListArray")
-            as? [String]  {
+        /*if let items = defaults.array(forKey: "TodoListArray")
+            as? [Item]  {
             itemArray = items
-        }
+        }*/
+
     }
 
     //MARK - Tableview Data Source Methods
@@ -34,7 +42,9 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
-        cell.textLabel?.text = itemArray[indexPath.row]
+        let item = itemArray[indexPath.row]
+        cell.textLabel?.text = item.title
+        cell.accessoryType = item.complete ? .checkmark : .none  //ternary operator
         return cell
     }
     
@@ -44,16 +54,12 @@ class TodoListViewController: UITableViewController {
     //Check/Uncheck selected items
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected - "+itemArray[indexPath.row])
         //highlight for flash, then deselect
+        //Flips checkmark value, but still needs to be reloaded
+        //reloads changes to tableview
         tableView.deselectRow(at: indexPath, animated: true)
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark
-        {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
-        } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
-        }
-        
+        itemArray[indexPath.row].complete = !itemArray[indexPath.row].complete
+        tableView.reloadData()  //reload to include changes
     }
     
     //MARK - Add New Items
@@ -61,19 +67,25 @@ class TodoListViewController: UITableViewController {
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         //Add UIAlert popup so user can type in new item for list
         
+        let newItem = Item()
+        
         var textField = UITextField() //constructor
         let alert = UIAlertController(title: "Add New Item", message: "", preferredStyle: .alert)
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
-            self.itemArray.append(textField.text!)
+            newItem.title = textField.text!
+            self.itemArray.append(newItem)
+            
             //save updated itemArray to userdef space after add
-            self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            self.tableView.reloadData()  //reload to include newly added data
-            print(self.itemArray)
+            /*self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            self.tableView.reloadData()  //reload to include newly added data*/
+
         }
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create New Item"
             textField = alertTextField
         }
+        
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
