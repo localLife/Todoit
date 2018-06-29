@@ -10,8 +10,9 @@ import Foundation
 import UIKit
 
 //This file defines List Item class for the TodoIt App
-
-class Item {
+//Must mark class as comforming to Encodable
+//for class to be encodable, all properties must be std data types
+class Item : Encodable {
     var title: String = ""
     var complete: Bool = false
 }

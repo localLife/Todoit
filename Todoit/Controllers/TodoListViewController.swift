@@ -12,24 +12,19 @@ class TodoListViewController: UITableViewController {
     
     //Array of Items
     var itemArray = [Item]()
-    //let defaults = UserDefaults.standard //sets up std user defaults space
-
+    
+    //Creating own plist with FileManager singleton
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory,
+        in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
         //Begin Hardcode
         let newItem = Item(); newItem.title = "Find Chocolate"; itemArray.append(newItem)
         let newItem2 = Item(); newItem2.title = "Buy Chocolate"; itemArray.append(newItem2)
         let newItem3 = Item(); newItem3.title = "Eat Chocolate"; itemArray.append(newItem3)
         //End Hardcode
-        
-        //Create Array of items from UserDefaults (1st line works only if User Defaults not empty.
-        //itemArray = defaults.array(forKey: "TodoListArray") as! [String]
-        /*if let items = defaults.array(forKey: "TodoListArray")
-            as? [Item]  {
-            itemArray = items
-        }*/
-
     }
 
     //MARK - Tableview Data Source Methods
@@ -59,7 +54,7 @@ class TodoListViewController: UITableViewController {
         //reloads changes to tableview
         tableView.deselectRow(at: indexPath, animated: true)
         itemArray[indexPath.row].complete = !itemArray[indexPath.row].complete
-        tableView.reloadData()  //reload to include changes
+        saveItems()
     }
     
     //MARK - Add New Items
@@ -74,11 +69,7 @@ class TodoListViewController: UITableViewController {
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             newItem.title = textField.text!
             self.itemArray.append(newItem)
-            
-            //save updated itemArray to userdef space after add
-            /*self.defaults.set(self.itemArray, forKey: "TodoListArray")
-            self.tableView.reloadData()  //reload to include newly added data*/
-
+            self.saveItems()
         }
         
         alert.addTextField { (alertTextField) in
@@ -88,6 +79,18 @@ class TodoListViewController: UITableViewController {
         
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    // MARK - Model Manipulation Methods
+    
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        do {
+            let data = try encoder.encode(itemArray)
+            try data.write(to: dataFilePath!)
+        } catch {
+            print("Help", error)
+        }
+        tableView.reloadData()
     }
 }
 
